@@ -1,6 +1,6 @@
 DEVICE := AT28C256
 BIN_FILE := rom.bin
-SRC := splash_screen.s screen.s init.s
+SRC := samux.s screen.s init.s util.s
 
 rom.bin:${SRC}
 	vasm -Fbin -dotdir -c02 -o $@ $<

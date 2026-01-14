@@ -170,8 +170,8 @@ _irq:
         bit T1CL
         jsr incr_timer
 exit_irq:
-        pla
         jsr toggle_led
+        pla
         rti
 
 ;; jump table

@@ -35,12 +35,8 @@ nop_wait:
         ldx #$0
 nop_wait_loop:
         inx
-        nop
-        nop
-        nop
-        nop
-        nop
-        cpx #$40
+        wai
+        cpx #$10
         bne nop_wait_loop
         plx
         rts

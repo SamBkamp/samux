@@ -64,9 +64,13 @@ return_home:
 ;;takes line in reg a (only reads lsb)
 go_to_line:
         pha
-        and #$ff
-        beq exit_go_to_line     ;if a is 0, we're already on line 0, exit
-        lda #%11000000          ;use set ddram to move to line 1 (quicker, no need return home or right shift loop). address set to 0x40 which is start of line 2
+        and #%00000001
+        beq line_zero
+        lda #%11000000          ;set ddram addr. to line 1
+        jmp send_dd_ram
+line_zero:
+        lda #%10000000          ;set ddram addr. to line 0
+send_dd_ram:
         sta PORTB
         jsr lcd_instruction_send
 exit_go_to_line:

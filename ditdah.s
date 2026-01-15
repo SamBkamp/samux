@@ -23,7 +23,7 @@ dumb_delay_loop:
         wai
         lda counter
         clc
-        sbc #$0A
+        sbc #$0F
         cmp counter_index
         bne dumb_delay_loop
         pla

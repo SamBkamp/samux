@@ -29,18 +29,6 @@ init_screen:
         pla
         rts
 
-;;this exists for annoying timing reasons....
-nop_wait:
-        phx
-        ldx #$0
-nop_wait_loop:
-        inx
-        wai
-        cpx #$10
-        bne nop_wait_loop
-        plx
-        rts
-
 ;;sreg
 clear_screen:
         pha

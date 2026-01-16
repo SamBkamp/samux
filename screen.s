@@ -91,11 +91,12 @@ reread:
 lcd_instruction_send:
         pha
         jsr lcd_wait
-        lda #0
+        lda PORTA
+        and #(!E)
         sta PORTA
-        lda #E                  ;toggle enable
+        ora #E
         sta PORTA
-        lda #0
+        and #(!E)
         sta PORTA
         pla
         rts

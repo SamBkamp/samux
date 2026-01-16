@@ -70,17 +70,22 @@ lcd_wait:
         lda #%00000000                  ;set drrb to input to read busy flag
         sta DDRB
 reread:
-        lda #RW                 ;set read/write
+        lda PORTA
+        and #!LCD_CTL_MASK        ;reset all control bits
         sta PORTA
 
-        lda #(RW|E)                  ;toggle enable
+        ora #RW                 ;set read/write
+        sta PORTA
+
+        ora #E                  ;toggle enable
         sta PORTA
 
         lda PORTB               ;read busy flag
         and #%10000000          ;compare with top bit (bf)
         bne reread
 
-        lda #RW                  ;toggle enable
+        lda PORTA
+        and #!E                  ;toggle enable
         sta PORTA
 
         lda #$ff                ;reset ddrb to output
@@ -91,28 +96,36 @@ reread:
 lcd_instruction_send:
         pha
         jsr lcd_wait
+
         lda PORTA
-        and #(!E)
+        and #!LCD_CTL_MASK        ;reset all control bits
         sta PORTA
-        ora #E
+
+        ora #E                  ;set E
         sta PORTA
-        and #(!E)
+
+        and #(!E)               ;unset E
         sta PORTA
+
         pla
         rts
 
 print_char:
-        sta PORTB
         jsr lcd_wait
+        sta PORTB
         pha
 
-        lda #RS                  ;turn on RS
+        lda PORTA
+        and #!LCD_CTL_MASK        ;reset all control bits
         sta PORTA
 
-        lda #(E|RS)             ;toggle enable
+        ora #RS                 ;turn on RS
         sta PORTA
 
-        lda #RS                  ;toggle enable
+        ora #E                  ;turn on e
+        sta PORTA
+
+        and #!E                 ;turn off e
         sta PORTA
 
         pla

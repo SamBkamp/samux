@@ -57,7 +57,7 @@ _start:
 _loop:
         lda PORTA
         and #BTN_START
-        beq _main
+        jsr _main
 
         lda program_sreg        ;check if program sreg lsb is set
         and #$01

@@ -68,6 +68,7 @@ B_NOT_PRESSED:
         jsr debounce_delay
 START_NOT_PRESSED:
         jmp dit_dah_loop
+        rts
 
 print_string_stored:
         phx

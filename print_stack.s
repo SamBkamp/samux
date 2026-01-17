@@ -14,7 +14,8 @@ print_stack_splash:
 
 ;;hex prefix
         lda #"0"
-        jsr print_char
+        ldx #$00
+        brk
         lda #"x"
         jsr print_char
         

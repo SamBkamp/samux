@@ -3,8 +3,8 @@ print_kernel_splash:
 print_splash_loop:
         lda splash, x
         beq prep_version_print
-        jsr print_char
         inx
+        jsr print_char
         jmp print_splash_loop
 
 prep_version_print:

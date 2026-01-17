@@ -57,14 +57,16 @@ _start:
 _loop:
         lda PORTA
         and #BTN_START
-        jsr _main
+        beq hand_off_to_user_space     ;only hand program control to user-space program if start has been pressed
 
         lda program_sreg        ;check if program sreg lsb is set
         and #$01
         bne _loop
 
         jsr print_stack_splash
-
+        jmp _loop
+hand_off_to_user_space:
+        jsr _main
         jmp _loop
 
 toggle_led:
@@ -113,6 +115,15 @@ _nmi:
         rti
 _irq:
         pha
+        lda IFR
+        and #%10000000
+        bne timer_interrupt_section
+        ldy #>exit_irq          ;load hi byte of return address
+        phy
+        ldy #<exit_irq          ;load lo byte of return address
+        phy                     ;store data on the stack for rts later
+        jmp (syscall_table, x)
+timer_interrupt_section:
         bit T1CL
         jsr incr_timer
         jsr toggle_led
@@ -123,8 +134,14 @@ _irq:
         ora program_sreg
         sta program_sreg
 exit_irq:
+        nop
         pla
         rti
+
+;;syscall table, the page before the jump table
+syscall_table:
+        .org $FF00
+        .word print_char
 
 ;; jump table
         .org $FFFA

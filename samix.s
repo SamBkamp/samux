@@ -53,6 +53,10 @@ _start:
         cli
 
 _loop:
+        lda counter+$1
+        cmp #$02
+        beq hand_off_to_user_space
+
 
         lda program_sreg        ;check if program sreg lsb is set
         and #$01
@@ -61,7 +65,6 @@ _loop:
         jsr print_stack_splash
         jmp _loop
 
-        beq hand_off_to_user_space     ;only hand program control to user-space program if start has been pressed
 hand_off_to_user_space:
         jsr _main
         jmp _loop

@@ -1,7 +1,6 @@
 DEVICE := AT28C256
 BIN_FILE := rom.bin
-SRC := samix.s echo.s kernel_utils/*
-#SRC := 4bit_test.s screen_4bit.s
+SRC := samix.s echo.s kernel_utils/* print_routines/* lcd/*
 
 rom.bin:${SRC}
 	vasm -Fbin -dotdir -wdc02 -o $@ $<

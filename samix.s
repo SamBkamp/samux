@@ -43,10 +43,7 @@ _start:
         jsr init_timer
         jsr init_screen
 
-        cli
-
         jsr print_kernel_splash
-
 
 _loop:
         lda counter+$1
@@ -79,7 +76,7 @@ toggle_led:
 end_toggle:
         rts
 
-;;include your actual program file here
+ ;;include your actual program file here
         .include "echo.s"
 
 ;;printing kernel splash
@@ -96,6 +93,9 @@ end_toggle:
 
 ;;utility code
         .include "util.s"
+
+;;syscall handlers
+        .include "syscall.s"
 
 
 incr_timer:

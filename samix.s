@@ -107,7 +107,7 @@ end_toggle:
         .include "./kernel_utils/syscall.s"
 
 splash_art:
-        .incbin "splash.txt"
+        .incbin "splash.raw"
         
 incr_timer:
         inc counter

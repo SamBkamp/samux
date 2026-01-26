@@ -19,6 +19,8 @@ If you simply compile this project without making any changes, ditdah will be co
 
 ## compilation
 
+`./configure.sh` will set up the project files for your hardware
+
 `make` will compile the binaries into a binary file called rom.bin
 
 and `make install` will install it onto the AT28C256 rom chip using minipro

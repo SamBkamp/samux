@@ -98,7 +98,7 @@ end_toggle:
         .include "./kernel_utils/init.s"
 
 ;;screen related boiler plate code
-        .include "./lcd/screen_4bit.s"
+        .include "./lcd/screen.s"
 
 ;;utility code
         .include "./kernel_utils/util.s"

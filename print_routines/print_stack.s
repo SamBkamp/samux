@@ -1,7 +1,9 @@
 print_stack_splash:
-
+        pha
+        phx
+        phy
+        ldy #$00                ;for write syscall
         jsr print_stack_prefix
-
         lda #$01
         jsr go_to_line          ;go to second line
 
@@ -16,7 +18,10 @@ print_stack_splash:
         nop
 
         jsr print_stack_address
-end_print_stack_splash:
+_end_print_stack_splash:
+        ply
+        plx
+        pla
         rts
 
 
@@ -25,17 +30,17 @@ print_stack_prefix:
         jsr clear_screen
         jsr return_home
         ldx #$0
-print_stack_loop:
+_print_stack_loop:
         lda hello_msg, x
-        beq exit_stack_hello
+        beq _exit_stack_hello
         phx
         ldx #$00
         brk
         nop
         plx
         inx
-        jmp print_stack_loop
-exit_stack_hello:
+        jmp _print_stack_loop
+_exit_stack_hello:
         pla
         rts
 
@@ -44,14 +49,14 @@ print_stack_address:
 
         lda remainder           ;print remainder of divide
         cmp #$0A          ;if not greater than 10
-        bcc not_letter    ;only add ascii "0"
+        bcc _not_letter    ;only add ascii "0"
         clc
         adc #("A"-10)           ;minus ten because lowest letter is 0x0A = 10
-        jmp print_stack_char
-not_letter:
+        jmp _print_stack_char
+_not_letter:
         clc
         adc #"0"
-print_stack_char:
+_print_stack_char:
         ldx #$00
         brk
         nop

@@ -1,5 +1,8 @@
 _main = echo
-char = $0300
+char_buffer = $0300             ;uses full page
+char_buffer_idx = $0400         ;one byte value
+
+
 
 ;;control characters
 NEWLINE = $0a
@@ -29,11 +32,12 @@ IRQ_CTRL = %00001000            ;irq pulled low, tx irq disabled
 IRQ_ENABLED = %00000010         ;irq disabled
 DTR_ENABLED = %00000001         ;dtr ready
 ;;9600 baud = ~104us per bit
-motd: .asciiz "Welcome to samix!"
 echo:
+        ;init char buffer
+        lda #$00
+        sta char_buffer_idx
 
         ;init acia
-        lda #$00
         sta ACIA_STATUS_REG         ;write something to the status reg to reset chip
         lda #( STOP_BIT_N | WORD_LEN | RX_CLK_SRC | SEL_BAUD_RATE )
         sta ACIA_CTRL_REG
@@ -50,21 +54,54 @@ event_loop:
         and #$08
         beq event_loop
 
+;;new character recieved
         lda ACIA_DATA_REG
+        sta ACIA_DATA_REG
+        jsr uart_bug_loop
         cmp #RETURN
-        bne not_return
+        bne _not_return
+;;return character sent
+        lda #NEWLINE            ;send newline so we send back \r\n
+        sta ACIA_DATA_REG
+        jsr uart_bug_loop
+        jsr print_char_buffer
+        lda #">"                ;print shell char
+        sta ACIA_DATA_REG
+        jsr uart_bug_loop
+        lda #$00                ;store 0 to char buffer if return was sent
+_not_return:                    ;store char in a to char buffer
+        ldx char_buffer_idx
+        sta char_buffer, x
+        inc char_buffer_idx
+        jsr uart_bug_loop
+_event_loop_end:
+        jmp event_loop
+        rts
+
+print_char_buffer:
+        pha
+        phx
+        ldx #$00
+_print_char_buffer_loop:
+        cpx char_buffer_idx     ;check if we reached idx
+        beq _print_char_buffer_exit
+        lda char_buffer, x
+        inx
+        sta ACIA_DATA_REG
+        jsr uart_bug_loop
+        jmp _print_char_buffer_loop
+_print_char_buffer_exit:
+        ldx #$00
+        stx char_buffer_idx     ;reset char buffer idx to start of buffer
+        lda #RETURN
         sta ACIA_DATA_REG
         jsr uart_bug_loop
         lda #NEWLINE
         sta ACIA_DATA_REG
         jsr uart_bug_loop
-        lda #">"
-not_return:
-        sta ACIA_DATA_REG
-        jsr uart_bug_loop
-        jmp event_loop
+        plx
+        pla
         rts
-
 
 print_motd:
         ldx #$00
@@ -99,7 +136,6 @@ uart_bug_loop:
         phx
         ldx #$ff
 uart_bug_loop1:
-        nop
         nop
         dex
         bne uart_bug_loop1

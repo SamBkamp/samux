@@ -1,6 +1,19 @@
 # Samix - a W65C02 kernel made for Ben Eater's computer
+```
+      _ -- ~~~ -- _
+  .-~               ~-.
+/         .--.         \
+:     .--.'--'.--.      :
+\     '--'.--.'--'      /
+ _        '--'         _
+   ~-._           _ .-~
+        -- ~~~ --
+```
+
 
 Samix (Sam + unix, lol) is a pretty basic "kernel" for Ben Eater's 6502 computer. It sets up some systems like software-accessible timers, asynchronous execution and so  on. It also provides some run-time "libraries" for the screen, among other things.
+
+Even though its called a kernel, its also a bios and a bootloader
 
 This only works for the WDC6502, and uses its extended ISA.
 
@@ -8,7 +21,7 @@ This only works for the WDC6502, and uses its extended ISA.
 
 On startup, samix inits a 10khz counter (that is, a counter that increments 10k times a second) and stores the data in a 3 byte value at counter. It also initialises a 1 byte "status register" value intended to contain software flags. The kernel only uses the lsb, and no longer needs this once it hands program flow to the main program. Becareful not to clobber this if you decide to use it.
 
-after this, the kernel splash will be printed to the lcd and and the kernel will hand off program control to the user program. 
+after this, the kernel splash will be printed to the lcd and and the kernel will hand off program control to the user program.
 
 
 ## user-defined program

@@ -99,7 +99,7 @@ end_toggle:
         .include "./kernel_utils/syscall.s"
 
 splash_art:
-        .incbin "splash.raw"
+        .incbin "jelly_splash.raw"
 
 incr_timer:
         inc counter

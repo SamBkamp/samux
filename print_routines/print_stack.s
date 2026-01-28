@@ -2,6 +2,7 @@ print_stack_splash:
         pha
         phx
         phy
+;;set up output target
         cpy #$00
         beq _stack_splash_to_lcd
         jsr print_stack_prefix
@@ -17,8 +18,8 @@ _stack_splash_to_lcd:
         lda #$01
         jsr go_to_line          ;go to second line
 
+;;print hex prefix 0x
 _print_addr_hex_prefix:
-;;hex prefix
         lda #"0"
         ldx #$00
         brk
@@ -54,22 +55,24 @@ _exit_stack_hello:
         rts
 
 print_stack_address:
-        jsr div_by_hex
-
-        lda remainder           ;print remainder of divide
+        tsx
+        txa                     ;div_by_hex takes arg in a reg and returns result in a reg
+        jsr div_by_hex          ;will return first nibble in a and second nibble in remainder
+_stack_address_print_loop:
         cmp #$0A          ;if not greater than 10
         bcc _not_letter    ;only add ascii "0"
         clc
         adc #("A"-10)           ;minus ten because lowest letter is 0x0A = 10
         jmp _print_stack_char
 _not_letter:
-        clc
         adc #"0"
 _print_stack_char:
         ldx #$00
         brk
         nop
 
-        lda value               ;check if any data left in value to div
-        bne print_stack_address ;keep dividing if yes
+        lda remainder
+        stx remainder                 ;should already be zero
+        cmp #$00
+        bne _stack_address_print_loop ;if we need keep dividing
         rts

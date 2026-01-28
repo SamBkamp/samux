@@ -9,14 +9,12 @@ IFR = $600D
 IER = $600E
 
 ;;one byte values
-value = $0200
-remainder = $0201
-irq_a_store = $0202
-irq_x_store = $0203
-irq_y_store = $0204
-program_sreg = $0205            ;flag variable for software use
-counter = $0206                 ;3 byte value
-last_toggle = $0209
+irq_a_store = $0200
+irq_x_store = $0201
+irq_y_store = $0202
+program_sreg = $0203            ;flag variable for software use
+counter = $0204                 ;3 byte value
+last_toggle = $0207
 
         .org $8000
 
@@ -34,9 +32,6 @@ _start:
         sta last_toggle
         sta program_sreg
         sta remainder
-
-        tsx
-        stx value
 
         jsr init_ports
         jsr init_timer

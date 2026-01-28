@@ -1,11 +1,13 @@
 ;;clobbers sreg, x, y and a
+divisor = $0208
+remainder = $0209
 div_by_ten:
         pha
         phx
         clc
         ldx #$08
 dividing_loop:
-        rol value               ;rotate quotient and mantissa
+        rol divisor               ;rotate quotient and mantissa
         rol remainder
 
 ;;a is dividend - divisor
@@ -19,21 +21,21 @@ ignore_result:
         dex
         bne dividing_loop
 
-        rol value               ;shift last carry bit into bottom of value
+        rol divisor               ;shift last carry bit into bottom of value
         plx
         pla
         rts
 
-;;easy as pie
+;;takes divisor in a register
+;;returns result in a, stores remainder in remainder
 div_by_hex:
         pha
-        lda value
-        and #$0f                ;keep only low nibble
+        and #$0f                ;store low nibble in remainder
         sta remainder
-
-        lsr value               ;move hi nibble into low nible pos
-        lsr value
-        lsr value
-        lsr value
         pla
+
+        lsr                     ;move hi nibble into low nible pos
+        lsr
+        lsr
+        lsr
         rts

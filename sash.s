@@ -1,16 +1,7 @@
 _main = echo
-char_buffer = $0300             ;uses full page
-char_buffer_idx = $0400         ;one byte value
-
 ;;control characters
 NEWLINE = $0a
 RETURN = $0d
-
-;;acia addresses
-ACIA_DATA_REG = $5000
-ACIA_STATUS_REG = $5001
-ACIA_CMD_REG = $5002
-ACIA_CTRL_REG = $5003
 
 ;;status reg masks
 RXR_FULL_MASK = $08

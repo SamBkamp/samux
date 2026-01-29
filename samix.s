@@ -1,21 +1,4 @@
-PORTB = $6000
-PORTA = $6001
-DDRB = $6002
-DDRA = $6003
-ACR = $600B
-T1CL = $6004
-T1CH = $6005
-IFR = $600D
-IER = $600E
-
-;;one byte values
-irq_a_store = $0200
-irq_x_store = $0201
-irq_y_store = $0202
-program_sreg = $0203            ;flag variable for software use
-counter = $0204                 ;3 byte value
-last_toggle = $0207
-
+        .include "addresses.s"
         .org $8000
 
 splash: .asciiz "samix kernel :3"

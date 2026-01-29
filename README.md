@@ -17,6 +17,8 @@ Even though its called a kernel, its also a bios and a bootloader
 
 This only works for the WDC6502, and uses its extended ISA.
 
+If you wanna help, check out the [todos page](todo.md)
+
 ## The startup flow
 
 On startup, samix inits a 10khz counter (that is, a counter that increments 10k times a second) and stores the data in a 3 byte value at counter. It also initialises a 1 byte "status register" value intended to contain software flags. The kernel only uses the lsb, and no longer needs this once it hands program flow to the main program. Becareful not to clobber this if you decide to use it.

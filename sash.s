@@ -3,6 +3,7 @@ _main = echo
 NEWLINE = $0a
 RETURN = $0d
 
+
 ;;status reg masks
 RXR_FULL_MASK = $08
 TXR_FULL_MASK = %00010000
@@ -73,6 +74,10 @@ _event_loop_end:
 shell_instruction:
         pha
         phy
+        phx
+        ldx char_buffer_idx
+        cpx #$01                ;shell instructions can only be one char
+        bne _instruction_not_recognised
         cmp #"v"
         bne _next_shell_instruction
         ldy #$01
@@ -94,6 +99,7 @@ _shell_end:                     ;resets the char_buffer and print \r\n
 _instruction_not_recognised:
         jsr print_char_buffer
 _shell_instruction_exit:
+        plx
         ply
         pla
         rts

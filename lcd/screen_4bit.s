@@ -46,7 +46,7 @@ init_by_instr:
         lda #%00101000          ;function set (4-bit mode, 2 line, 5x8)
         jsr lcd_instruction_send
         
-        lda #%000001110          ;display byte 2 on, cur on, blink off
+        lda #%000001100          ;display byte 2 on, cur off, blink off
         jsr lcd_instruction_send        
         
         lda #%00000110          ;entry mode byte 2, incr, no scroll

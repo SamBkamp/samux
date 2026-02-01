@@ -160,7 +160,7 @@ read_mem_address:
         phx
         lda char_buffer_idx
         sec
-        cmp #$2
+        cmp #$3
         bcc address_invalid
         ldx #$02
 read_mem_loop:

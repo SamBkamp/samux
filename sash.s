@@ -77,7 +77,7 @@ shell_instruction:
         phx
         ldx char_buffer_idx
         cpx #$01                ;shell instructions can only be one char
-        bne _instruction_not_recognised
+        bne _next_shell_instruction
         cmp #"v"
         bne _next_shell_instruction
         ldy #$01
@@ -85,9 +85,15 @@ shell_instruction:
         jmp _shell_end
 _next_shell_instruction:
         cmp #"s"
-        bne _instruction_not_recognised
+        bne _next_shell_instruction2
         ldy #$01
         jsr print_stack_splash
+        jmp _shell_end
+_next_shell_instruction2:       ;i have got to come up with a better naming scheme
+        cmp #"r"
+        bne _instruction_not_recognised
+        ldy #$01
+        jsr read_mem_address
 _shell_end:                     ;resets the char_buffer and print \r\n
         ldy #$00
         sty char_buffer_idx     ;reset char buffer idx to start of buffer
@@ -149,4 +155,37 @@ end_loop:
         jsr serial_char
         rts
 
+read_mem_address:
+        pha
+        phx
+        lda char_buffer_idx
+        sec
+        cmp #$2
+        bcc address_invalid
+        ldx #$02
+read_mem_loop:
+        lda char_buffer, x
+        jsr serial_char
+        inx
+        cpx char_buffer_idx
+        bne read_mem_loop
+end_read_mem_address:
+        plx
+        pla
+        rts
+
+error_msg: .asciiz "arguments not recognised"
+address_invalid:
+        ldx #$00
+address_invalid_loop:
+        lda error_msg, x
+        beq exit_address_invalid_loop
+        jsr serial_char
+        inx
+        jmp address_invalid_loop
+exit_address_invalid_loop:
+        plx
+        pla
+        rts
+        
         .include "serial_connection/serial.s"

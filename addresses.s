@@ -9,6 +9,8 @@ ACR = $600B
 IFR = $600D
 IER = $600E
 
+
+
 ;;samix addresses
 ;;one byte values
 irq_a_store = $0200
@@ -18,9 +20,10 @@ program_sreg = $0203            ;flag variable for software use
 counter = $0204                 ;3 byte value
 last_toggle = $0207
 
-;;sash addresses         
+;;sash addresses
 char_buffer = $0300             ;uses full page
 char_buffer_idx = $0400         ;one byte value
+conversion_word = $000A         ;two byte value
 
 ;;acia addresses
 ACIA_DATA_REG = $5000

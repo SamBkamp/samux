@@ -3,7 +3,6 @@ _main = echo
 NEWLINE = $0a
 RETURN = $0d
 
-
 ;;status reg masks
 RXR_FULL_MASK = $08
 TXR_FULL_MASK = %00010000
@@ -158,22 +157,36 @@ end_loop:
 read_mem_address:
         pha
         phx
+        lda #$00
+        sta conversion_word
+        sta conversion_word+1
         lda char_buffer_idx
         sec
+;;if str len < 3 || str len >= 7
         cmp #$3
         bcc address_invalid
+        cmp #$07
+        bcs address_invalid
+        clc
         ldx #$02
 read_mem_loop:
         lda char_buffer, x
-        jsr serial_char
+        jsr add_nibble_to_word
         inx
         cpx char_buffer_idx
         bne read_mem_loop
-end_read_mem_address:
+
+        lda conversion_word
+        jsr print_byte_to_hex
+
+        lda #" "
+        jsr serial_char
+
+        lda conversion_word+1
+        jsr print_byte_to_hex
         plx
         pla
         rts
-
 error_msg: .asciiz "arguments not recognised"
 address_invalid:
         ldx #$00
@@ -187,5 +200,26 @@ exit_address_invalid_loop:
         plx
         pla
         rts
-        
+
+add_nibble:
+        pha
+        sbc #$30
+        pha
+        txa
+        and #$01
+        beq no_nibble_shift     ;if number is even, branch
+        pla
+        asl
+        asl
+        asl
+        asl
+        pha
+no_nibble_shift:
+        pla
+        ora conversion_word+1
+        sta conversion_word+1
+        pla
+        rts
+
+        .include "sash_char_to_word.s"
         .include "serial_connection/serial.s"

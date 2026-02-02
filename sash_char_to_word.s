@@ -31,7 +31,7 @@ _print_bth_loop:
 _print_bth_not_letter:
         adc #"0"
 _print_bth_nibble:
-        jsr serial_char
+        jsr write_serial
         tya
         dex
         bne _print_bth_loop

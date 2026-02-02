@@ -18,9 +18,9 @@ _prep_version_print:
         and #$FF
         beq _prep_version_lcd   ;for lcd
         lda #RETURN             ;for serial connection
-        jsr serial_char
+        jsr write_serial
         lda #NEWLINE
-        jsr serial_char
+        jsr write_serial
         ldx #$00
         jmp _print_version_loop
 _prep_version_lcd:

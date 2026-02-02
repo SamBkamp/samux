@@ -97,9 +97,9 @@ _shell_end:                     ;resets the char_buffer and print \r\n
         ldy #$00
         sty char_buffer_idx     ;reset char buffer idx to start of buffer
         lda #RETURN
-        jsr serial_char
+        jsr write_serial
         lda #NEWLINE
-        jsr serial_char
+        jsr write_serial
         jmp _shell_instruction_exit
 _instruction_not_recognised:
         jsr print_char_buffer
@@ -141,17 +141,17 @@ print_motd_loop:
         beq end_loop
         cmp #NEWLINE
         bne motd_not_newline_char
-        jsr serial_char
+        jsr write_serial
         lda #RETURN
 motd_not_newline_char:
-        jsr serial_char
+        jsr write_serial
         inx
         jmp print_motd_loop
 end_loop:
         lda #RETURN
-        jsr serial_char
+        jsr write_serial
         lda #NEWLINE
-        jsr serial_char
+        jsr write_serial
         rts
 
 read_mem_address:
@@ -176,13 +176,13 @@ read_mem_loop:
         cpx char_buffer_idx
         bne read_mem_loop
 
+        lda conversion_word+1
+        jsr print_byte_to_hex
         lda conversion_word
         jsr print_byte_to_hex
-
-        lda #" "
-        jsr serial_char
-
-        lda conversion_word+1
+        lda #":"
+        jsr write_serial
+        lda (conversion_word)
         jsr print_byte_to_hex
         plx
         pla
@@ -193,7 +193,7 @@ address_invalid:
 address_invalid_loop:
         lda error_msg, x
         beq exit_address_invalid_loop
-        jsr serial_char
+        jsr write_serial
         inx
         jmp address_invalid_loop
 exit_address_invalid_loop:

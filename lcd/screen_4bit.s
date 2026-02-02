@@ -163,7 +163,7 @@ send_instruction_nibble:
         sta PORTB
         rts
         
-print_char:
+write_lcd:
         pha
         pha
 

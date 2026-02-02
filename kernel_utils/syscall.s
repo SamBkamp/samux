@@ -1,9 +1,9 @@
 write:
         cpy #$0
         beq lcd_write
-        jsr serial_char
+        jsr write_serial
         jmp end_write
 lcd_write:
-        jsr print_char
+        jsr write_lcd
 end_write:
         rts

@@ -1,6 +1,5 @@
-serial_char:
+write_serial:
         pha
-serial_loop:
         sta ACIA_DATA_REG
         jsr uart_bug_loop
         pla
@@ -9,10 +8,10 @@ serial_loop:
 uart_bug_loop:
         phx
         ldx #$ff
-uart_bug_loop1:
+_uart_bug_loop_wait:
         nop
         dex
-        bne uart_bug_loop1
+        bne _uart_bug_loop_wait
 
         plx
         rts

@@ -7,9 +7,9 @@ print_stack_splash:
         beq _stack_splash_to_lcd
         jsr print_stack_prefix
         lda #RETURN
-        jsr serial_char
+        jsr write_serial
         lda #NEWLINE
-        jsr serial_char
+        jsr write_serial
         jmp _print_addr_hex_prefix
 _stack_splash_to_lcd:
         jsr clear_screen

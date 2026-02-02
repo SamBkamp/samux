@@ -2,7 +2,7 @@
         .org $8000
 
 splash: .asciiz "samix kernel :3"
-version_num: .asciiz "v0.2.2"
+version_num: .asciiz "v0.2.3"
 hello_msg: .asciiz "stack starts at:"
 _start:
         ldx #$FF
@@ -119,8 +119,8 @@ exit_irq:
         .org $FF00
 syscall_table:
         .word write
-        .word print_char
-        .word serial_char
+        .word write_lcd
+        .word write_serial
 
 ;; jump table
         .org $FFFA

@@ -116,7 +116,7 @@ lcd_instruction_send:
 
 
 write:
-print_char_to_lcd:
+write_lcd:
         jsr lcd_wait
         sta PORTB
         pha

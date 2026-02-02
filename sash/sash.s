@@ -34,6 +34,9 @@ echo:
         sta ACIA_CMD_REG
 
         jsr print_motd
+        ldy #$01
+        jsr print_kernel_splash
+
         lda #">"
         ldx #$00
         ldy #$01

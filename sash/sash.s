@@ -221,5 +221,5 @@ no_nibble_shift:
         pla
         rts
 
-        .include "sash_char_to_word.s"
+        .include "sash/char_to_word.s"
         .include "serial_connection/serial.s"

@@ -2,6 +2,7 @@ _main = echo
 ;;control characters
 NEWLINE = $0a
 RETURN = $0d
+BACKSPACE = $08
 
 ;;status reg masks
 RXR_FULL_MASK = $08
@@ -20,7 +21,6 @@ ECHO_MODE = %00000000           ;rx normal mode (no echo)
 IRQ_CTRL = %00001000            ;irq pulled low, tx irq disabled
 IRQ_ENABLED = %00000010         ;irq disabled
 DTR_ENABLED = %00000001         ;dtr ready
-;;9600 baud = ~104us per bit
 echo:
         ;init char buffer
         lda #$00
@@ -54,12 +54,11 @@ event_loop:
 
 ;;new character recieved
         lda ACIA_DATA_REG
-        sta ACIA_DATA_REG
-        jsr uart_bug_loop
         cmp #RETURN
-        bne _not_return
+        bne _check_backspace
 ;;return character sent
-        lda #NEWLINE            ;send newline so we send back \r\n
+        sta ACIA_DATA_REG       ;send back \r
+        lda #NEWLINE            ;send \n
         sta ACIA_DATA_REG
         jsr uart_bug_loop
         lda char_buffer
@@ -68,7 +67,29 @@ event_loop:
         sta ACIA_DATA_REG
         jsr uart_bug_loop
         jmp _event_loop_end
-_not_return:                    ;store char in a to char buffer
+_check_backspace:
+        cmp #BACKSPACE
+        bne _not_ctrlchar
+
+        lda char_buffer_idx     ;for some reason a bit instruction doesn't work here
+        beq _event_loop_end     ;if char buffer idx is already 0, we don't need to do anything
+
+        lda #BACKSPACE
+        sta ACIA_DATA_REG       ;send backspace back
+        jsr uart_bug_loop
+
+        lda #" "                ;send whitespace to erase char
+        sta ACIA_DATA_REG
+        jsr uart_bug_loop
+
+        lda #BACKSPACE          ;send backspace to realign terminal
+        sta ACIA_DATA_REG
+        jsr uart_bug_loop
+
+        dec char_buffer_idx
+        jmp _event_loop_end
+_not_ctrlchar:                  ;store char in a to char buffer
+        sta ACIA_DATA_REG       ;send character back
         ldx char_buffer_idx
         sta char_buffer, x
         inc char_buffer_idx

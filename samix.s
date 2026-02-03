@@ -14,7 +14,6 @@ _start:
         sta counter+$2
         sta last_toggle
         sta program_sreg
-        sta remainder
 
         jsr init_ports
         jsr init_timer

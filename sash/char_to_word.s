@@ -20,33 +20,10 @@ nibble_word_loop:
 print_byte_to_hex:
         phx
         phy
-        ldx #$02
-        jsr div_by_hex_1
-_print_bth_loop:
-        cmp #$0A
-        bcc _print_bth_not_letter
-        clc
-        adc #("A"-10)
-        jmp _print_bth_nibble
-_print_bth_not_letter:
-        adc #"0"
-_print_bth_nibble:
-        jsr write_serial
-        tya
-        dex
-        bne _print_bth_loop
+        jsr div_by_hex
+        jsr print_low_nibble
+        txa
+        jsr print_low_nibble
         ply
         plx
-        rts
-
-div_by_hex_1:
-        pha
-        and #$0f
-        tay
-        pla
-
-        lsr
-        lsr
-        lsr
-        lsr
         rts

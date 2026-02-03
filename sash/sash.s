@@ -36,6 +36,10 @@ echo:
         jsr print_motd
         ldy #$01
         jsr print_kernel_splash
+        lda #RETURN
+        jsr write_serial
+        lda #NEWLINE
+        jsr write_serial
 
         lda #">"
         ldx #$00

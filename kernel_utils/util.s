@@ -1,41 +1,33 @@
-;;clobbers sreg, x, y and a
-divisor = $0208
-remainder = $0209
-div_by_ten:
-        pha
-        phx
-        clc
-        ldx #$08
-dividing_loop:
-        rol divisor               ;rotate quotient and mantissa
-        rol remainder
-
-;;a is dividend - divisor
-        sec
-        lda remainder
-        sbc #10
-        bcc ignore_result       ;discard if not divisible here
-
-        sta remainder
-ignore_result:
-        dex
-        bne dividing_loop
-
-        rol divisor               ;shift last carry bit into bottom of value
-        plx
-        pla
-        rts
-
 ;;takes divisor in a register
-;;returns result in a, stores remainder in remainder
+;;returns result in a, stores remainder in x
 div_by_hex:
         pha
         and #$0f                ;store low nibble in remainder
-        sta remainder
+        tax
         pla
 
         lsr                     ;move hi nibble into low nible pos
         lsr
         lsr
         lsr
+        rts
+
+print_low_nibble:
+        pha
+        phx
+
+        cmp #$0A                ;if not greater than 10
+        bcc _nibble_not_letter  ;only add ascii "0"
+        clc
+        adc #("A"-10)    ;minus ten because lowest letter is 0x0A = 10
+        jmp _print_nibble
+_nibble_not_letter:
+        adc #"0"
+_print_nibble:
+        ldx #$00
+        brk
+        nop
+
+        plx
+        pla
         rts

@@ -57,22 +57,8 @@ _exit_stack_hello:
 print_stack_address:
         tsx
         txa                     ;div_by_hex takes arg in a reg and returns result in a reg
-        jsr div_by_hex          ;will return first nibble in a and second nibble in remainder
-_stack_address_print_loop:
-        cmp #$0A          ;if not greater than 10
-        bcc _not_letter    ;only add ascii "0"
-        clc
-        adc #("A"-10)           ;minus ten because lowest letter is 0x0A = 10
-        jmp _print_stack_char
-_not_letter:
-        adc #"0"
-_print_stack_char:
-        ldx #$00
-        brk
-        nop
-
-        lda remainder
-        stx remainder                 ;should already be zero
-        cmp #$00
-        bne _stack_address_print_loop ;if we need keep dividing
+        jsr div_by_hex          ;will return first nibble in a and second nibble in y
+        jsr print_low_nibble
+        txa
+        jsr print_low_nibble
         rts

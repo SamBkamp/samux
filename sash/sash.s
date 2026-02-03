@@ -67,6 +67,7 @@ _check_newline:
         sta ACIA_DATA_REG
         jsr uart_bug_loop
         jmp _event_loop_end
+
 _check_backspace:
         cmp #BACKSPACE
         bne _not_ctrlchar
@@ -88,15 +89,19 @@ _check_backspace:
 
         dec char_buffer_idx
         jmp _event_loop_end
+
 _not_ctrlchar:                  ;store char in a to char buffer
         sta ACIA_DATA_REG       ;send character back
         ldx char_buffer_idx
         sta char_buffer, x
         inc char_buffer_idx
         jsr uart_bug_loop
+
 _event_loop_end:
         jmp event_loop
         rts
+
+unknown_command_string: .asciiz "unknown command"
 
 shell_instruction:
         pha
@@ -104,23 +109,37 @@ shell_instruction:
         phx
         ldx char_buffer_idx
         cpx #$01
-        bne _next_shell_instruction2
+        bne _next_shell_instruction
+
         cmp #"v"
         bne _next_shell_instruction
         ldy #$01
         jsr print_kernel_splash
         jmp _shell_end
+
 _next_shell_instruction:
         cmp #"s"
         bne _next_shell_instruction2
         ldy #$01
         jsr print_stack_splash
         jmp _shell_end
+
 _next_shell_instruction2:       ;i have got to come up with a better naming scheme
         cmp #"r"
         bne _instruction_not_recognised
         ldy #$01
         jsr read_mem_address
+        jmp _shell_end
+
+_instruction_not_recognised:
+        ldx #$00
+_instruction_nr_loop:
+        lda unknown_command_string, x
+        beq _shell_end
+        jsr write_serial
+        inx
+        jmp _instruction_nr_loop
+
 _shell_end:                     ;resets the char_buffer and print \r\n
         ldy #$00
         sty char_buffer_idx     ;reset char buffer idx to start of buffer
@@ -128,9 +147,7 @@ _shell_end:                     ;resets the char_buffer and print \r\n
         jsr write_serial
         lda #NEWLINE
         jsr write_serial
-        jmp _shell_instruction_exit
-_instruction_not_recognised:
-        jsr print_char_buffer
+
 _shell_instruction_exit:
         plx
         ply

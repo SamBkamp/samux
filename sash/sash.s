@@ -56,7 +56,7 @@ event_loop:
         lda ACIA_DATA_REG
         cmp #RETURN
         bne _check_backspace
-;;return character sent
+_check_newline:
         sta ACIA_DATA_REG       ;send back \r
         lda #NEWLINE            ;send \n
         sta ACIA_DATA_REG
@@ -103,8 +103,8 @@ shell_instruction:
         phy
         phx
         ldx char_buffer_idx
-        cpx #$01                ;shell instructions can only be one char
-        bne _next_shell_instruction
+        cpx #$01
+        bne _next_shell_instruction2
         cmp #"v"
         bne _next_shell_instruction
         ldy #$01

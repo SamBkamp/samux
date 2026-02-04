@@ -134,7 +134,12 @@ _next_shell_instruction2:       ;i have got to come up with a better naming sche
 _next_shell_instruction3:
         cmp #"P"
         bne _instruction_not_recognised
-
+        jsr print_charbuf_to_lcd
+        lda #RETURN
+        jsr write_serial
+        ldy #$00
+        sty char_buffer_idx
+        jmp _shell_instruction_exit
 
 _instruction_not_recognised:
         ldx #$00
@@ -160,6 +165,7 @@ _shell_instruction_exit:
         rts
 
 
+        .include "sash/print_to_lcd.s"
         .include "sash/sash_print_routines.s"
         .include "sash/read_mem_address.s"
         .include "sash/char_to_word.s"

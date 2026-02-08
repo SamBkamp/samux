@@ -3,6 +3,8 @@
 This is a simple shell written for Samix on the BE6502
 
 ### commands
+`?` - prints help message (below) to serial
+
 `v` - prints the version splash
 
 `s` - prints the current stack pointer location

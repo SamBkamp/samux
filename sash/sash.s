@@ -150,7 +150,7 @@ _next_shell_instruction3:
 
 _next_shell_instruction4:
         cmp #"?"
-        bne _instruction_not_recognised
+        bne _next_shell_instruction5
         ldx #$00
 _print_help_str_loop:
         lda help_string, x
@@ -158,6 +158,13 @@ _print_help_str_loop:
         jsr write_serial
         inx
         jmp _print_help_str_loop
+
+_next_shell_instruction5:
+        cmp #"w"
+        bne _instruction_not_recognised
+        jsr write_mem_address
+        jmp _shell_end
+
 _instruction_not_recognised:
         ldx #$00
 _instruction_nr_loop:

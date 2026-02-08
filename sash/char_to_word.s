@@ -1,7 +1,7 @@
 add_nibble_to_word:
         pha
         phx
-        eor #$30
+        eor #$30                ;converts ascii 0-9 to digit
         ldx #$04
 ;;shift word one nibble over to make space for next nibble
 nibble_word_loop:

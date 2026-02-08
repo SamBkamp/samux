@@ -6,7 +6,7 @@ add_nibble_to_word:
         eor #$30                ;converts ascii 0-9 to digit
         jmp nibble_word_start
 nibble_is_letter:
-        and #%11011111          ;sets bit 5 to 0 (char to lowercase)
+        and #%11011111          ;sets bit 5 to 0 (char to uppercase)
         sbc #("A"-10)           ;converts ascii A-F to digit
 nibble_word_start:
         ldx #$04

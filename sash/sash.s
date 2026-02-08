@@ -102,6 +102,13 @@ _event_loop_end:
         rts
 
 unknown_command_string: .asciiz "unknown command"
+help_string:
+        .byte "Available commands:", RETURN, NEWLINE
+        .byte "v - prints version splash", RETURN, NEWLINE
+        .byte "s - prints current stack pointer location", RETURN, NEWLINE
+        .byte "r xxxx - prints the byte at address xxxx, the address can be 1, 2, 3 or 4 bytes long", RETURN, NEWLINE
+        .byte "P [str] - prints the string passed as argument to the LCD"
+        .byte 0
 
 shell_instruction:
         pha
@@ -133,7 +140,7 @@ _next_shell_instruction2:       ;i have got to come up with a better naming sche
 
 _next_shell_instruction3:
         cmp #"P"
-        bne _instruction_not_recognised
+        bne _next_shell_instruction4
         jsr print_charbuf_to_lcd
         lda #RETURN
         jsr write_serial
@@ -141,6 +148,16 @@ _next_shell_instruction3:
         sty char_buffer_idx
         jmp _shell_instruction_exit
 
+_next_shell_instruction4:
+        cmp #"?"
+        bne _instruction_not_recognised
+        ldx #$00
+_print_help_str_loop:
+        lda help_string, x
+        beq _shell_end
+        jsr write_serial
+        inx
+        jmp _print_help_str_loop
 _instruction_not_recognised:
         ldx #$00
 _instruction_nr_loop:

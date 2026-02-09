@@ -24,6 +24,17 @@ nibble_word_loop:
         pla
         rts
 
+ascii_to_nibble:
+        cmp #"9"
+        bcs _ascii_tn_is_letter
+        eor #$30
+        jmp _ascii_to_nibble_exit
+_ascii_tn_is_letter:
+        and #%11011111          ;sets bit 5 to 0 (char to uppercase)
+        sbc #("A"-10)           ;converts ascii A-F to digit
+_ascii_to_nibble_exit:
+        rts
+
 print_byte_to_hex:
         phx
         phy

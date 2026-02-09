@@ -49,22 +49,25 @@ parse_data_byte:
 ;;x should already be the index of the preceeding space
         inx                     ;point to first char of address
         lda char_buffer, x
-        eor #$30                ;converts ascii 0-9 to digit
-        rol
-        rol
-        rol
-        rol
-        sta conversion_word
+        jsr ascii_to_nibble
+        asl
+        asl
+        asl
+        asl
+        pha
+
         inx
         lda char_buffer, x
-        eor #$30
-        ora conversion_word
+        jsr ascii_to_nibble
+
+        tsx                   ;get the stack pointer (points to free pos)
+        eor $0101, x          ;stack starts at 0100, but we start the index from 0101 to account for the fact that the stack pointer points to one passed (ie lower, address-wise) than the most recent pushed byte
+;;we could use an inx instruction and index from the bottom of the stack like normal but that wastes a byte of rom space and a few cycles
         jsr print_byte_to_hex
 
-write_mem_address_exit:
-
-        pla
         plx
+        pla                     ;pull a pushed earlier
+        pla
         rts
 
 read_mem_address:

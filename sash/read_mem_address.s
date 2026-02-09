@@ -44,7 +44,7 @@ parse_data_byte:
         jsr print_byte_to_hex
         lda conversion_word
         jsr print_byte_to_hex
-        lda #" "
+        lda #":"
         jsr write_serial
 ;;x should already be the index of the preceeding space
         inx                     ;point to first char of address
@@ -63,6 +63,9 @@ parse_data_byte:
         tsx                   ;get the stack pointer (points to free pos)
         eor $0101, x          ;stack starts at 0100, but we start the index from 0101 to account for the fact that the stack pointer points to one passed (ie lower, address-wise) than the most recent pushed byte
 ;;we could use an inx instruction and index from the bottom of the stack like normal but that wastes a byte of rom space and a few cycles
+;;a now contains the data to be written
+        sta (conversion_word)
+        lda (conversion_word)
         jsr print_byte_to_hex
 
         plx

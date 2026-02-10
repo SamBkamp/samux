@@ -1,7 +1,7 @@
 add_nibble_to_word:
         pha
         phx
-        cmp #"9"
+        cmp #"A"
         bcs nibble_is_letter
         eor #$30                ;converts ascii 0-9 to digit
         jmp nibble_word_start
@@ -25,7 +25,7 @@ nibble_word_loop:
         rts
 
 ascii_to_nibble:
-        cmp #"9"
+        cmp #"A"
         bcs _ascii_tn_is_letter
         eor #$30
         jmp _ascii_to_nibble_exit

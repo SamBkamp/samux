@@ -7,7 +7,7 @@ write_serial:
 
 uart_bug_loop:
         phx
-        ldx #$ff
+        ldx #$90
 _uart_bug_loop_wait:
         nop
         dex

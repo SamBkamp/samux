@@ -2,21 +2,6 @@ E = %00001000
 RW = %00000100
 RS = %00000010
 LCD_CTL_MASK = %00001110
-
-stupid_delay:
-        phx
-        ldx #$ff
-stupid_loop:
-        nop
-        nop
-        nop
-        nop
-        nop
-        nop
-        dex
-        bne stupid_loop
-        plx
-        rts
         
 ;;sreg
 ;;clobbers portb and porta
@@ -69,7 +54,6 @@ clear_screen:
         rts
 
 ;;sreg
-;;clobers porta
 return_home:
         pha
         lda #%10000000                ;home hi byte

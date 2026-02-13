@@ -18,12 +18,15 @@ irq_x_store = $0201
 irq_y_store = $0202
 program_sreg = $0203            ;flag variable for software use
 counter = $0204                 ;3 byte value
-last_toggle = $0207
+last_toggle = $0207             ;one byte value
+random = $0208                  ;one byte value
+random_internal_state  = $0209  ;one byte value
 
 ;;sash addresses
 char_buffer = $0300             ;uses full page
 char_buffer_idx = $0400         ;one byte value
 conversion_word = $000A         ;two byte value
+last_keypress_time = $000C      ;one byte value
 
 ;;acia addresses
 ACIA_DATA_REG = $5000

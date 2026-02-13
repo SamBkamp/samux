@@ -26,12 +26,15 @@ echo:
         lda #$00
         sta char_buffer_idx
 
+
         ;init acia
         sta ACIA_STATUS_REG         ;write something to the status reg to reset chip
         lda #( STOP_BIT_N | WORD_LEN | RX_CLK_SRC | SEL_BAUD_RATE )
         sta ACIA_CTRL_REG
         lda #( PARITY_MODE | PARITY_MODE_ENABLED | ECHO_MODE | IRQ_CTRL | IRQ_ENABLED | DTR_ENABLED )
         sta ACIA_CMD_REG
+
+        lda counter
 
         jsr print_motd
         ldy #$01
@@ -53,6 +56,7 @@ event_loop:
         beq event_loop
 
 ;;new character recieved
+
         lda ACIA_DATA_REG
         cmp #RETURN
         bne _check_backspace
@@ -162,8 +166,15 @@ _print_help_str_loop:
 
 _next_shell_instruction5:
         cmp #"w"
-        bne _instruction_not_recognised
+        bne _next_shell_instruction6
         jsr write_mem_address
+        jmp _shell_end
+
+_next_shell_instruction6:
+        cmp #"q"
+        bne _instruction_not_recognised
+        jsr next_random
+        jsr print_byte_to_hex
         jmp _shell_end
 
 _instruction_not_recognised:

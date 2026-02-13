@@ -2,11 +2,14 @@
         .org $8000
 
 splash: .asciiz "samix kernel :3"
-version_num: .asciiz "v0.2.3"
+version_num: .asciiz "v0.3.3"
 hello_msg: .asciiz "stack starts at:"
 _start:
         ldx #$FF
         txs
+
+        lda #%10010001
+        sta random              ;init random counter
 
         lda #$0                 ;init counter
         sta counter
@@ -108,7 +111,7 @@ service_timer:
         bit T1CL
         jsr incr_timer
 exit_irq:
-        nop
+        nop                     ;for syscall alignment reasons
         lda irq_a_store
         ldx irq_x_store
         ldy irq_y_store

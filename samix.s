@@ -8,7 +8,7 @@ _start:
         ldx #$FF
         txs
 
-        lda #%10010001
+        lda #%10101010          ;just alternating 1s and 0s. NUMSN
         sta random              ;init random counter
 
         lda #$0                 ;init counter

@@ -115,7 +115,8 @@ help_string:
         .byte "s - prints current stack pointer location", RETURN, NEWLINE
         .byte "r xxxx - prints the byte at address xxxx, the address can be 1, 2, 3 or 4 bytes long", RETURN, NEWLINE
         .byte "w xxxx yy - writes the byte yy to address xxxx, address can be 1-4 bytes, byte needs to be 2 bytes. Hexademical representation", RETURN, NEWLINE
-        .byte "P [str] - prints the string passed as argument to the LCD"
+        .byte "P [str] - prints the string passed as argument to the LCD", RETURN, NEWLINE
+        .byte "q - returns a pseudo random byte"
         .byte 0
 
 shell_instruction:

@@ -56,6 +56,9 @@ event_loop:
         beq event_loop
 
 ;;new character recieved
+        lda counter             ;add entropy
+        eor random
+        sta random
 
         lda ACIA_DATA_REG
         cmp #RETURN
